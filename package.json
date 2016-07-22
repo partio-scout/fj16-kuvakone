@@ -8,6 +8,7 @@
     "test": "npm run linter && npm run test-mocha",
     "linter": "eslint --ext js --ext jsx src test scripts webpack.development.config.babel.js webpack.production.config.babel.js",
     "test-mocha": "NODE_ENV=test mocha --timeout 4000 --compilers js:babel-register",
+    "create-tables": "psql $DATABASE_URL -f sql/create-tables.sql",
     "bundle": "NODE_ENV=production webpack -p --config webpack.production.config.babel.js"
   },
   "dependencies": {
