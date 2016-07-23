@@ -37,6 +37,7 @@
     "react": "^15.2.1",
     "react-bootstrap": "^0.30.0-rc.2",
     "react-dom": "^15.2.1",
+    "react-image-lightbox": "^3.0.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "superagent": "^2.1.0",
