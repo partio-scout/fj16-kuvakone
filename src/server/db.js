@@ -53,8 +53,8 @@ export function upsertPhotos(photos) {
   return db.query('SELECT id FROM photos;')
   .then(ids => _.map(ids, id => id.id))
   .then(ids => {
-    const toCreate = _.filter(photos, photo => (ids.indexOf(photo.id) === -1));
-    const toUpdate = _.filter(photos, photo => (ids.indexOf(photo.id) !== -1));
+    const toCreate = _.filter(photos, photo => (!_.includes(ids, photo.id)));
+    const toUpdate = _.filter(photos, photo => (_.includes(ids, photo.id)));
 
     return Promise.join(
       insertPhotos(toCreate),
@@ -101,8 +101,8 @@ export function upsertPhotosets(photosets) {
   photosets = photosets.photosets.photoset;
   getPhotosetIds()
   .then(ids => {
-    const toCreate = _.filter(photosets, photoset => (ids.indexOf(photoset.id) === -1));
-    const toUpdate = _.filter(photosets, photoset => (ids.indexOf(photoset.id) !== -1));
+    const toCreate = _.filter(photosets, photoset => (!_.includes(ids, photoset.id)));
+    const toUpdate = _.filter(photosets, photoset => (_.includes(ids, photoset.id)));
 
     return Promise.join(
       insertPhotosets(toCreate),
