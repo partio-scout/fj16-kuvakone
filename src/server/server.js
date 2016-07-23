@@ -2,6 +2,7 @@ import express from 'express';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import * as dbUtils from './db';
+import pg from 'pg-promise';
 
 const Flickr = require('flickrapi');
 const flickrOptions = {
@@ -13,8 +14,31 @@ const flickrUserId = process.env.FLICKR_USER_ID || '142180152@N04'; // Roihu2016
 
 const app = express();
 const port = process.env.PORT || 3000;
+const pgp = pg();
 
-app.get('/', (req, res) => res.send('Kuvakone'));
+const db = pgp(process.env.DATABASE_URL);
+
+app.use(express.static('src/public'));
+
+app.get('/photos',(req,res) => {
+  db.any('select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos')
+    .then( data => {
+      const results = data.map(obj => {
+        const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
+        return {
+          title:obj.title,
+          date:obj.date_taken,
+          latitude:obj.latitude,
+          longitude:obj.longitude,
+          large:`${url_tmp}_h.jpg`,
+          thumbnail:`${url_tmp}_q.jpg`,
+        };
+      });
+      res.json(results);
+    })
+    .catch( error => res.send('error'));
+
+});
 
 app.get('/loadPhotos', (req, response) => {
   const photosPerPage = 50;
