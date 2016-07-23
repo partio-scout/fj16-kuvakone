@@ -1,13 +1,15 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-export function Thumbnails({ photos }) {
+export function Thumbnails({ photos, onSelected }) {
   return (
     <Row>
       {
-        photos.map(photo => (
+        photos.map((photo, index) => (
           <Col key={ photo.id } sm={ 2 }>
-            <img src={ photo.thumbnail } />
+            <a onClick={ function() { onSelected(index); } }>
+              <img src={ photo.thumbnail } />
+            </a>
           </Col>
         ))
       }
@@ -16,5 +18,6 @@ export function Thumbnails({ photos }) {
 }
 
 Thumbnails.propTypes = {
-  photos: React.PropTypes.arrayOf(React.PropTypes.object),
+  photos: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  onSelected: React.PropTypes.func.isRequired,
 };
