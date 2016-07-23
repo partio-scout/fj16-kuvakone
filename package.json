@@ -30,6 +30,8 @@
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
     "pg-promise": "^5.2.5",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
