@@ -65,21 +65,13 @@ app.get('/loadPhotos', (req, response) => {
   }
 
   function getPublicPhotos() {
-    return new Promise((resolve, reject) => {
-      const photos = [];
-      let pagesToGet;
-      getPhotosCount()
-      .then(countPage => pagesToGet = Math.ceil(countPage.photos.total / photosPerPage))
-      .then(() => {
-        //console.log('pages to get', pagesToGet);
-        const pagePromises = [];
-        for (let i = 1; i <= pagesToGet; i++) {
-          pagePromises.push(getPublicPhotosPage(i)
-          .then(page => _.forEach(page.photos.photo, p => photos.push(p))));
-        }
-        Promise.all(pagePromises).then(() => resolve(photos));
-      });
-    });
+    return getPhotosCount()
+    .then(countPage => Math.ceil(countPage.photos.total / photosPerPage))
+    .then(pagesToGet => Promise.all(_.map(_.range(1, pagesToGet + 1), pageNum =>
+      getPublicPhotosPage(pageNum)
+        .then(page => page.photos.photo)
+      )))
+    .then(x => _.flattenDeep(x));
   }
 
   function getPhotosCount() {
