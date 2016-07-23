@@ -21,7 +21,8 @@ const db = pgp(process.env.DATABASE_URL);
 app.use(express.static('src/public'));
 
 app.get('/photos',(req,res) => {
-  db.any('select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos')
+  const str = 'select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos where date_taken >= ${startdate} and date_taken <= ${enddate}';
+  db.any(str,{ startdate:req.query.startdate || '-infinity', enddate:req.query.enddate || 'infinity' })
     .then( data => {
       const results = data.map(obj => {
         const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
@@ -36,8 +37,7 @@ app.get('/photos',(req,res) => {
       });
       res.json(results);
     })
-    .catch( error => res.send('error'));
-
+    .catch( error => {res.send(error);console.log(error);});
 });
 
 app.get('/loadPhotos', (req, response) => {
