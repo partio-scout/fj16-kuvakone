@@ -17,7 +17,7 @@ export class App extends React.Component {
   }
 
   reloadPhotos() {
-    request.get('/test/photos')
+    request.get('/photos')
       .accept('application/json')
       .then(response => this.setState({ photos: response.body }));
   }
