@@ -9,7 +9,7 @@ export function insertPhotos(photos) {
 
   return db.task(t => {
     const queries = _.map(photos, photo =>
-      db.none(template, {
+      t.none(template, {
         id: photo.id,
         owner: photo.owner,
         secret: photo.secret,
@@ -31,7 +31,7 @@ export function updatePhotos(photos) {
   const template = 'UPDATE photos SET owner=$(owner), secret=$(secret), server=$(server), farm=$(farm), title=$(title), date_taken=$(date_taken), position=ST_GeographyFromText(\'SRID=4326;POINT($(lon) $(lat))\') WHERE id=$(id); ';
   return db.task(t => {
     const queries = _.map(photos, photo =>
-      db.none(template, {
+      t.none(template, {
         id: photo.id,
         owner: photo.owner,
         secret: photo.secret,
@@ -70,7 +70,7 @@ export function insertPhotosets(photosets) {
 
   return db.task(t => {
     const queries = _.map(photosets, photoset =>
-      db.none(template, {
+      t.none(template, {
         id: photoset.id,
         title: photoset.title._content,
       })
@@ -87,7 +87,7 @@ export function updatePhotosets(photosets) {
 
   return db.task(t => {
     const queries = _.map(photosets, photoset =>
-      db.none(template, {
+      t.none(template, {
         id: photoset.id,
         title: photoset.title._content,
       })
@@ -127,7 +127,7 @@ export function reCreatePhotosetPhotos(photosetPhotos) {
       const queries = [];
       _.forEach(photosetPhotos, photoset => {
         _.forEach(photoset.photos, photoId => {
-          queries.push(db.none(template, {
+          queries.push(t.none(template, {
             photo_id: photoId,
             photoset_id: photoset.photosetId,
           }));
