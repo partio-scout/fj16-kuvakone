@@ -9,7 +9,7 @@ const db = pgp(process.env.DATABASE_URL);
 
 app.get('/', (req, res) => res.send('Kuvakone'));
 
-app.get('/kuvat',(req,res) => {
+app.get('/photos',(req,res) => {
   db.any('select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos', [true])
     .then( data => {
       const results = data.map(obj => {
