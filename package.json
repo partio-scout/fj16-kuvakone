@@ -11,7 +11,8 @@
     "create-tables": "psql $DATABASE_URL -f sql/create-tables.sql",
     "create-fake-data": "psql $DATABASE_URL -f sql/create-fake-data.sql",
     "reset-database": "vagrant/reset-database.sh",
-    "bundle": "NODE_ENV=production webpack -p --config webpack.production.config.babel.js"
+    "bundle": "NODE_ENV=production webpack -p --config webpack.production.config.babel.js",
+    "backend": "babel-node src/server/server.js"
   },
   "dependencies": {
     "babel-cli": "^6.11.4",
@@ -27,6 +28,8 @@
     "eslint": "^3.1.1",
     "eslint-plugin-react": "^5.2.2",
     "express": "^4.14.0",
+    "flickrapi": "^0.5.0",
+    "lodash": "^4.13.1",
     "file-loader": "^0.9.0",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",

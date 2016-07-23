@@ -3,4 +3,5 @@ node_modules/
 *.json~
 src/public/build/
 .vagrant/
+data/
 npm-debug.log

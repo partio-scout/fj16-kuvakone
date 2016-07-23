@@ -1,0 +1,5 @@
+BEGIN;
+  DROP TABLE IF EXISTS photoset_photos;
+  DROP TABLE IF EXISTS photos;
+  DROP TABLE IF EXISTS photosets;
+COMMIT;
