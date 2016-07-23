@@ -1,6 +1,7 @@
 import express from 'express';
 import Promise from 'bluebird';
 import _ from 'lodash';
+import * as dbUtils from './db';
 
 const Flickr = require('flickrapi');
 const flickrOptions = {
@@ -20,15 +21,18 @@ app.get('/loadPhotos', (req, response) => {
   Flickr.tokenOnly(flickrOptions, (error, flickrApp) => {
     flickr = flickrApp;
     getPublicPhotos()
-    .then(res => {
-      response.send(res);
-    });
+    .then(photos => {
+      return dbUtils.upsertPhotos(photos);
+    })
+    .then((a,b) => response.send({a,b}))
+    .catch(e => console.error(e));
   });
 
   function getPublicPhotosPage(page) {
     return Promise.fromCallback(callback => flickr.people.getPublicPhotos({
       user_id: flickrUserId,
       page: page || 1,
+      extras: 'geo, date_taken',
     }, callback));
   }
 
@@ -37,13 +41,13 @@ app.get('/loadPhotos', (req, response) => {
       const photos = [];
       let pagesToGet;
       getPhotosCount()
-      .then(photosCount => pagesToGet = Math.ceil(photosCount / 100))
+      .then(countPage => pagesToGet = Math.ceil(countPage.photos.total / 100))
       .then(() => {
-        console.log('pages to get', pagesToGet);
+        //console.log('pages to get', pagesToGet);
         const pagePromises = [];
         for (let i = 1; i <= pagesToGet; i++) {
           pagePromises.push(getPublicPhotosPage(i)
-          .then(page => _.forEach(page.photos, photo => photos.push(photo))));
+          .then(page => _.forEach(page.photos.photo, p => photos.push(p))));
         };
         Promise.all(pagePromises).then(() => resolve(photos));
       });
@@ -51,16 +55,12 @@ app.get('/loadPhotos', (req, response) => {
   }
 
   function getPhotosCount() {
-    return new Promise((resolve, reject) => {
+    return Promise.fromCallback(callback =>
       flickr.people.getPublicPhotos({
         user_id: flickrUserId,
         page: 1,
         per_page: 1,
-      }, (err, res) => {
-        if (err) reject(err);
-        else resolve(res.photos.total);
-      });
-    });
+      }, callback));
   }
 
 });
