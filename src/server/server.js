@@ -3,36 +3,29 @@ import pg from 'pg-promise';
 
 const app = express();
 const port = process.env.PORT || 3000;
-var pgp = pg();
+const pgp = pg();
 
-var db = pgp(process.env.DATABASE_URL);
+const db = pgp(process.env.DATABASE_URL);
 
 app.get('/', (req, res) => res.send('Kuvakone'));
 
-
-app.get('/kuvat',function(req,res){
-  db.any("select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as posx, ST_Y(position::geometry) as posy from photos", [true])
-    .then(function (data) {
-      var results = [];
-      for (var i = 0;i<data.length;i++){
-        var tmp = {};
-        //construct url
-        var url_tmp = "https://farm" + data[i].farm + ".staticflickr.com/" + data[i].server+"/"+data[i].id+"_"+data[i].secret;
-        tmp.large = url_tmp + '_h.jpg';
-        tmp.thumbnail = url_tmp + '_q.jpg';
-        tmp.date = data[i].date_taken;
-        tmp.title = data[i].title;
-        tmp.latitude = data[i].posx;
-        tmp.longitude = data[i].posy;
-        results.push(tmp);
-      }
+app.get('/kuvat',(req,res) => {
+  db.any('select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos', [true])
+    .then( data => {
+      const results = data.map(obj => {
+        const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
+        return {
+          title:obj.title,
+          date:obj.date_taken,
+          latitude:obj.latitude,
+          longitude:obj.longitude,
+          large:`${url_tmp}_h.jpg`,
+          thumbnail:`${url_tmp}_q.jpg`,
+        };
+      });
       res.json(results);
-
     })
-    .catch(function (error){
-      console.log(error);
-      res.send('error');
-    });
+    .catch( error => res.send('error'));
 
 });
 
