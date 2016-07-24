@@ -142,17 +142,32 @@ export function reCreatePhotosetPhotos(photosetPhotos) {
 export function searchPhotos(query) {
   const db = pgp(process.env.DATABASE_URL);
 
-  const str = 'select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos where date_taken >= ${startdate} and date_taken <= ${enddate}';
-  return db.any(str, { startdate: query.startdate || '-infinity', enddate: query.enddate || 'infinity' })
-    .then(data => data.map(obj => {
-      const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
-      return {
-        title: obj.title,
-        date: obj.date_taken,
-        latitude: obj.latitude,
-        longitude: obj.longitude,
-        large: `${url_tmp}_h.jpg`,
-        thumbnail: `${url_tmp}_q.jpg`,
-      };
-    }));
+  let queryTemplate = 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
+  p.secret as secret, p.id as id, ST_X(p.position::geometry) as latitude, ST_Y(p.position::geometry) as longitude, pp.photoset_id as photoset_id \
+  FROM photos p LEFT OUTER JOIN photoset_photos pp ON p.id=pp.photo_id \
+  WHERE (date_taken BETWEEN ${startdate} AND ${enddate}) ';
+
+  const params = {
+    startdate: query.startdate || '-infinity',
+    enddate: query.enddate || 'infinity',
+  };
+
+  if (query.photosets) {
+    queryTemplate += 'AND (pp.photoset_id IN (${photosets:csv})) ';
+    params.photosets = _.split(query.photosets, ',');
+  }
+
+  return db.any(queryTemplate, params)
+  .then(data => _.map(data, obj => {
+    const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
+    return {
+      title: obj.title,
+      date: obj.date_taken,
+      latitude: obj.latitude,
+      longitude: obj.longitude,
+      large: `${url_tmp}_h.jpg`,
+      thumbnail: `${url_tmp}_q.jpg`,
+      photoset: obj.photoset_id,
+    };
+  }));
 }
