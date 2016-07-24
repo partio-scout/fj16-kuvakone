@@ -1,4 +1,4 @@
-import { HotModuleReplacementPlugin } from 'webpack';
+//import { HotModuleReplacementPlugin } from 'webpack';
 import path from 'path';
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -9,8 +9,6 @@ export default {
   context: __dirname,
   devtool: 'eval-source-map',
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/dev-server',
     mainPath,
   ],
   output: {
@@ -29,7 +27,9 @@ export default {
     loaders: [
       {
         test: /\.js$|\.jsx$/,
-        loaders: ['react-hot','babel?{"presets":["react", "es2015"]}'],
+        loaders: [
+          'babel?{"presets":["react", "es2015"]}',
+        ],
         exclude: [nodeModulesPath],
       },
       {
@@ -47,5 +47,4 @@ export default {
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=10000&minetype=image/svg+xml' },
     ],
   },
-  plugins: [new HotModuleReplacementPlugin()],
 };

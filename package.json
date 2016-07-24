@@ -4,7 +4,7 @@
   "description": "Finnjamboree 2016 photo display page",
   "scripts": {
     "start": "npm run bundle && babel-node src/server/server.js",
-    "watch": "nodemon --ignore src/public/build",
+    "watch": "nodemon --ignore src/public/build --exec 'npm run bundle-dev && babel-node src/server/server.js'",
     "test": "npm run linter && npm run test-mocha",
     "linter": "eslint --ext js --ext jsx src test scripts webpack.development.config.babel.js webpack.production.config.babel.js",
     "test-mocha": "NODE_ENV=test mocha --timeout 4000 --compilers js:babel-register",
@@ -12,6 +12,7 @@
     "create-fake-data": "psql $DATABASE_URL -f sql/create-fake-data.sql",
     "reset-database": "vagrant/reset-database.sh",
     "bundle": "NODE_ENV=production webpack -p --config webpack.production.config.babel.js",
+    "bundle-dev": "webpack --config webpack.development.config.babel.js",
     "backend": "babel-node src/server/server.js"
   },
   "dependencies": {
@@ -28,9 +29,9 @@
     "eslint": "^3.1.1",
     "eslint-plugin-react": "^5.2.2",
     "express": "^4.14.0",
+    "file-loader": "^0.9.0",
     "flickrapi": "^0.5.0",
     "lodash": "^4.13.1",
-    "file-loader": "^0.9.0",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
     "pg-promise": "^5.2.5",
@@ -38,6 +39,7 @@
     "react-bootstrap": "^0.30.0-rc.2",
     "react-dom": "^15.2.1",
     "react-image-lightbox": "^3.0.0",
+    "rheostat": "^1.1.2",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "superagent": "^2.1.0",
