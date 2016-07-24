@@ -1,6 +1,7 @@
 import express from 'express';
 import * as dbUtils from './db';
 import * as flickrUtis from './flickrutils';
+import Promise from 'bluebird';
 
 const Flickr = require('flickrapi');
 const flickrOptions = {
@@ -23,16 +24,17 @@ app.get('/photos',(req,res) => {
 });
 
 app.get('/loadPhotos', (req, response) => {
-  Flickr.tokenOnly(flickrOptions, (error, flickr) => {
-    flickrUtis.getPublicPhotos(flickr)
-    .then(photos => dbUtils.upsertPhotos(photos))          // update photos
-    .then(() => flickrUtis.getPhotoSets(flickr))
-    .then(photosets => dbUtils.upsertPhotosets(photosets)) // update photosets
-    .then(() => flickrUtis.getPhotoSetPhotoIds(flickr))
-    .then(photoIds => dbUtils.reCreatePhotosetPhotos(photoIds))   // map photos to photosets
-    .then(() => response.send('OK'))
-    .catch(e => console.error(e));
-  });
+  const flickrTokenOnly = Promise.promisify(Flickr.tokenOnly);
+
+  flickrTokenOnly(flickrOptions)
+  .tap(flickr => flickrUtis.getPublicPhotos(flickr)
+    .then(photos => dbUtils.upsertPhotos(photos)))          // update photos
+  .tap(flickr => flickrUtis.getPhotoSets(flickr)
+    .then(photosets => dbUtils.upsertPhotosets(photosets))) // update photosets
+  .tap(flickr => flickrUtis.getPhotoSetPhotoIds(flickr)
+    .then(photoIds => dbUtils.reCreatePhotosetPhotos(photoIds)))   // map photos to photosets
+  .then(() => response.send('OK'))
+  .catch(e => console.error(e));
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
