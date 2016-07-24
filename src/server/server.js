@@ -2,7 +2,6 @@ import express from 'express';
 import Promise from 'bluebird';
 import _ from 'lodash';
 import * as dbUtils from './db';
-import pg from 'pg-promise';
 
 const Flickr = require('flickrapi');
 const flickrOptions = {
@@ -14,30 +13,16 @@ const flickrUserId = process.env.FLICKR_USER_ID || '142180152@N04'; // Roihu2016
 
 const app = express();
 const port = process.env.PORT || 3000;
-const pgp = pg();
-
-const db = pgp(process.env.DATABASE_URL);
 
 app.use(express.static('src/public'));
 
 app.get('/photos',(req,res) => {
-  const str = 'select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos where date_taken >= ${startdate} and date_taken <= ${enddate}';
-  db.any(str,{ startdate:req.query.startdate || '-infinity', enddate:req.query.enddate || 'infinity' })
-    .then( data => {
-      const results = data.map(obj => {
-        const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
-        return {
-          title:obj.title,
-          date:obj.date_taken,
-          latitude:obj.latitude,
-          longitude:obj.longitude,
-          large:`${url_tmp}_h.jpg`,
-          thumbnail:`${url_tmp}_q.jpg`,
-        };
-      });
-      res.json(results);
-    })
-    .catch( error => {res.send(error);console.log(error);});
+  dbUtils.searchPhotos(req.query)
+  .then(result => res.json(result))
+  .catch(error => {
+    res.send(error);
+    console.log(error);
+  });
 });
 
 app.get('/loadPhotos', (req, response) => {

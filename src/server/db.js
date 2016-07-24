@@ -1,6 +1,8 @@
-const pgp = require('pg-promise')();
 import _ from 'lodash';
 import Promise from 'bluebird';
+import pg from 'pg-promise';
+
+const pgp = pg();
 
 export function insertPhotos(photos) {
   const db = pgp(process.env.DATABASE_URL);
@@ -134,5 +136,23 @@ export function reCreatePhotosetPhotos(photosetPhotos) {
         });
       });
       return t.batch(queries);
+    }));
+}
+
+export function searchPhotos(query) {
+  const db = pgp(process.env.DATABASE_URL);
+
+  const str = 'select title, date_taken, farm, server, secret, id, ST_X(position::geometry) as latitude, ST_Y(position::geometry) as longitude from photos where date_taken >= ${startdate} and date_taken <= ${enddate}';
+  return db.any(str, { startdate: query.startdate || '-infinity', enddate: query.enddate || 'infinity' })
+    .then(data => data.map(obj => {
+      const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
+      return {
+        title: obj.title,
+        date: obj.date_taken,
+        latitude: obj.latitude,
+        longitude: obj.longitude,
+        large: `${url_tmp}_h.jpg`,
+        thumbnail: `${url_tmp}_q.jpg`,
+      };
     }));
 }
