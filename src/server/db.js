@@ -19,8 +19,8 @@ export function insertPhotos(photos) {
         farm: photo.farm,
         title: photo.title,
         date_taken: photo.datetaken,
-        lon: photo.longitude,
-        lat: photo.latitude,
+        lon: parseFloat(photo.longitude),
+        lat: parseFloat(photo.latitude),
       }));
 
     return t.batch(queries);
@@ -41,8 +41,8 @@ export function updatePhotos(photos) {
         farm: photo.farm,
         title: photo.title,
         date_taken: photo.datetaken,
-        lon: photo.longitude,
-        lat: photo.latitude,
+        lon: parseFloat(photo.longitude),
+        lat: parseFloat(photo.latitude),
       }));
 
     return t.batch(queries);
