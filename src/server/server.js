@@ -25,7 +25,7 @@ app.get('/photos',(req,res) => {
 
 app.get('/photosets', (req, res) => {
   dbUtils.getPhotosets()
-  .then(ps => res.send(ps))
+  .then(ps => res.json(ps))
   .catch(e => {
     res.send(e);
     console.log(e);
