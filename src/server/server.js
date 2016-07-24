@@ -23,6 +23,15 @@ app.get('/photos',(req,res) => {
   });
 });
 
+app.get('/photosets', (req, res) => {
+  dbUtils.getPhotosets()
+  .then(ps => res.send(ps))
+  .catch(e => {
+    res.send(e);
+    console.log(e);
+  });
+});
+
 app.get('/loadPhotos', (req, response) => {
   const flickrTokenOnly = Promise.promisify(Flickr.tokenOnly);
 
