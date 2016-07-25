@@ -34,10 +34,11 @@ html, body {
 }
 
 #kuvakone {
-  background: $purple;
   color: $white;
   font: $base-font-size/1 $aleo;
   padding: 1em;
+  
+  background: url('/img/bg.svg') 0 0 no-repeat $purple;;
   
   & > div {
     max-width: $large;
