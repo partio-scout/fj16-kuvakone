@@ -13,14 +13,10 @@ export class MapFilter extends React.Component {
     const bounds = this.refs.map.leafletElement.getBounds();
 
     this.props.onChange({
-      southWest: {
-        lat: bounds._southWest.lat,
-        lon: bounds._southWest.lng,
-      },
-      northEast: {
-        lat: bounds._northEast.lat,
-        lon: bounds._northEast.lng,
-      },
+      north: bounds._northEast.lat,
+      east: bounds._northEast.lng,
+      south: bounds._southWest.lat,
+      west: bounds._southWest.lng,
     });
   }
 
