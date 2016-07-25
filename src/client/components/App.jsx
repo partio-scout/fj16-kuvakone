@@ -1,6 +1,7 @@
 import React from 'react';
+import _ from 'lodash';
 import { request } from '../utils';
-import { Thumbnails, PhotoViewer, DateFilter } from '../components';
+import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter } from '../components';
 
 export class App extends React.Component {
   constructor(props) {
@@ -8,9 +9,13 @@ export class App extends React.Component {
 
     this.handleThumbnailSelected = this.handleThumbnailSelected.bind(this);
     this.handleDateFilterChange = this.handleDateFilterChange.bind(this);
+    this.handlePhotosetSelectionChange = this.handlePhotosetSelectionChange.bind(this);
 
     this.state = {
       photos: [],
+      photosets: [],
+      selectedPhotoIndex: undefined,
+      selectedPhotosetIds: [],
       startDate: new Date('2016-07-15'),
       endDate: new Date('2016-07-31'),
     };
@@ -18,6 +23,7 @@ export class App extends React.Component {
 
   componentWillMount() {
     this.reloadPhotos();
+    this.loadPhotoSets();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,7 +33,15 @@ export class App extends React.Component {
   }
 
   filterChanged(prevState) {
-    return this.state.startDate !== prevState.startDate || this.state.endDate !== prevState.endDate;
+    return !_.isEqual(getFilters(this.state), getFilters(prevState));
+
+    function getFilters(state) {
+      return {
+        startDate: state.startDate,
+        endDate: state.endDate,
+        selectedPhotosetIds: state.selectedPhotosetIds,
+      };
+    }
   }
 
   reloadPhotos() {
@@ -37,15 +51,23 @@ export class App extends React.Component {
       .then(response => this.setState({ photos: response.body }));
   }
 
+  loadPhotoSets() {
+    request.get('/photosets')
+      .accept('application/json')
+      .then(response => this.setState({ photosets: response.body }));
+  }
+
   getQueryFilters() {
     const {
       startDate,
       endDate,
+      selectedPhotosetIds,
     } = this.state;
 
     return {
       startdate: startDate && this.mapDateToISODateString(startDate),
       enddate: endDate && this.mapDateToISODateString(endDate),
+      photosets: selectedPhotosetIds && selectedPhotosetIds.join(',') || undefined,
     };
   }
 
@@ -60,6 +82,12 @@ export class App extends React.Component {
     });
   }
 
+  handlePhotosetSelectionChange(newSelectedPhotosetIds) {
+    this.setState({
+      selectedPhotosetIds: newSelectedPhotosetIds,
+    });
+  }
+
   mapDateToISODateString(date) {
     return `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
   }
@@ -68,6 +96,7 @@ export class App extends React.Component {
     return (
       <div>
         <h1>Kuvakone</h1>
+        <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
         <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />
@@ -75,4 +104,3 @@ export class App extends React.Component {
     );
   }
 }
-
