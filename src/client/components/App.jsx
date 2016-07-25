@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
 import { request } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter } from '../components';
 
@@ -68,23 +67,9 @@ export class App extends React.Component {
   render() {
     return (
       <div>
-        <Grid>
-          <Row>
-            <Col xs={ 12 }>
-              <h1>Kuvakone</h1>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={ 12 }>
-              <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
-            </Col>
-          </Row>
-        </Grid>
+        <h1>Kuvakone</h1>
+        <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
+        <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />
       </div>
     );
