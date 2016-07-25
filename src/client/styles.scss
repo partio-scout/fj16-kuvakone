@@ -1,6 +1,107 @@
 @import "~rheostat/css/slider.css";
 @import "~rheostat/css/slider-horizontal.css";
 
-.rheostat-horizontal {
-  height: 50px;
+// Typography
+$base-font-size: 18px;
+$aleo: 'Aleo', serif;
+$exo: 'Exo2', sans-serif;
+$exo2: $exo;
+
+// Roihu colors
+
+$blue: #36a9e1;
+$green: #00a870;
+$yellow: #ffed00;
+$red: #e74011;
+$purple: #b80170;
+
+// Other colors
+
+$black: #000;
+$white: #fff;
+$grey: #dbdbdb;
+
+// Breakpoints
+
+$mobile: 768px;
+$small: 1024px;
+$medium: 1280px;
+$large: 1680px;
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+#kuvakone {
+  background: $purple;
+  color: $white;
+  font: $base-font-size/1 $aleo;
+  padding: 1em;
+  
+  & > div {
+    max-width: $large;
+    margin: 0 auto;
+  }
+
+  h1 {
+    margin: 1em 1rem;
+    font-family: $exo;
+  }
+  
+  .photoset-filters {
+    margin: 1em;
+
+    label {
+      display: block;
+    }
+  }
+  
+  .rheostat-horizontal {
+    height: 50px;
+    margin: 1em;
+    
+    & > div:not(.rheostat-background):not(.rheostat-handle):not(.rheostat-progress) {
+      width: 50px;
+      margin-left: -25px;
+      text-align: center;
+    }
+  }
+  
+  .thumbnails {
+    margin: 0 -1em;
+    
+    a {
+      width: 100%;
+      display: block;
+      background: $black;
+      
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+      }
+    }
+    
+    @media (min-width: 501px) {
+      margin: 0;
+      
+      &:after {
+        content: ' ';
+        display: block;
+        clear: both;
+      }
+      
+      a {
+        width: 150px;
+        height: 150px;
+        margin: 0.5em;
+        float: left;
+        cursor: pointer;
+      }
+    }
+  }
+
+  
 }
