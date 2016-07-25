@@ -173,24 +173,24 @@ function getPhotoSelectionSql(queryParameters) {
   const hasGeoData = queryParameters.bounds && queryParameters.bounds.north && queryParameters.bounds.south && queryParameters.bounds.west && queryParameters.bounds.east;
 
   if (queryParameters.photosets && hasGeoData) {
-    return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
+    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
-  FROM photos p LEFT OUTER JOIN photoset_photos pp ON p.id=pp.photo_id \
-  WHERE (date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) AND \
+  FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
+  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) AND \
   (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position))';
   } else if (queryParameters.photosets) {
-    return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
+    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
-  FROM photos p LEFT OUTER JOIN photoset_photos pp ON p.id=pp.photo_id \
-  WHERE (date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv}))';
+  FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
+  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv}))';
   } else if (hasGeoData) {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
-  FROM photos p WHERE (date_taken BETWEEN ${startdate} AND ${enddate}) AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position))';
+  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position))';
   } else {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
-  FROM photos p WHERE (date_taken BETWEEN ${startdate} AND ${enddate})';
+  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate})';
   }
 }
 
