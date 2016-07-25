@@ -160,6 +160,7 @@ export function searchPhotos(query) {
 
   return db.any(queryTemplate, params)
   .then(data => _.map(data, obj => ({
+    id: obj.id,
     title: obj.title,
     date: obj.date_taken,
     latitude: obj.latitude,
