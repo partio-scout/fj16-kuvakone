@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-import { Checkbox, FormGroup } from 'react-bootstrap';
 
 export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
   return (
@@ -18,7 +17,8 @@ export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
                     const newSelectedPhotosetIds = checked ? _.without(selectedPhotosetIds, photoset.id) : _.concat(selectedPhotosetIds, photoset.id);
                     onChange(newSelectedPhotosetIds);
                   }
-                }/>
+                }
+              />
               { photoset.title }
             </label>
           );

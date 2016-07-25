@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { request } from '../utils';
-import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter } from '../components';
+import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
 
 export class App extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ export class App extends React.Component {
     this.handleThumbnailSelected = this.handleThumbnailSelected.bind(this);
     this.handleDateFilterChange = this.handleDateFilterChange.bind(this);
     this.handlePhotosetSelectionChange = this.handlePhotosetSelectionChange.bind(this);
+    this.handleMapChange = this.handleMapChange.bind(this);
 
     this.state = {
       photos: [],
@@ -18,6 +19,7 @@ export class App extends React.Component {
       selectedPhotosetIds: [],
       startDate: new Date('2016-07-15'),
       endDate: new Date('2016-07-31'),
+      bounds: undefined,
     };
   }
 
@@ -40,6 +42,7 @@ export class App extends React.Component {
         startDate: state.startDate,
         endDate: state.endDate,
         selectedPhotosetIds: state.selectedPhotosetIds,
+        bounds: state.bounds,
       };
     }
   }
@@ -62,12 +65,14 @@ export class App extends React.Component {
       startDate,
       endDate,
       selectedPhotosetIds,
+      bounds,
     } = this.state;
 
     return {
       startdate: startDate && this.mapDateToISODateString(startDate),
       enddate: endDate && this.mapDateToISODateString(endDate),
       photosets: selectedPhotosetIds && selectedPhotosetIds.join(',') || undefined,
+      bounds: bounds,
     };
   }
 
@@ -88,6 +93,12 @@ export class App extends React.Component {
     });
   }
 
+  handleMapChange(bounds) {
+    this.setState({
+      bounds: bounds,
+    });
+  }
+
   mapDateToISODateString(date) {
     return `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}`;
   }
@@ -97,6 +108,7 @@ export class App extends React.Component {
       <div>
         <h1>Kuvakone</h1>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
+        <MapFilter photos={ this.state.photos } onChange={ this.handleMapChange } />
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
         <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />
