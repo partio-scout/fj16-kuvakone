@@ -167,7 +167,8 @@ export function searchPhotos(query) {
       latitude: obj.latitude,
       longitude: obj.longitude,
       large: `${url_tmp}_h.jpg`,
-      thumbnail: `${url_tmp}_q.jpg`,
+      medium: `${url_tmp}.jpg`,
+      square: `${url_tmp}_q.jpg`,
       photoset: obj.photoset_id,
     };
   }));

@@ -1,19 +1,20 @@
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
 
 export function Thumbnails({ photos, onSelected }) {
   return (
-    <Row>
+    <div className="thumbnails">
       {
         photos.map((photo, index) => (
-          <Col key={ photo.id } sm={ 2 }>
-            <a onClick={ function() { onSelected(index); } }>
-              <img src={ photo.thumbnail } />
-            </a>
-          </Col>
+          <a onClick={ function() { onSelected(index); } } key={ index }>
+            <img
+              src={ photo.square }
+              srcSet={ `${ photo.square } 150w, ${ photo.medium } 500w` }
+              sizes="(min-width: 501px) 150px, 100vw"
+            />
+          </a>
         ))
       }
-    </Row>
+    </div>
   );
 }
 
