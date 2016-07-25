@@ -11,6 +11,7 @@ export class App extends React.Component {
     this.handleDateFilterChange = this.handleDateFilterChange.bind(this);
     this.handlePhotosetSelectionChange = this.handlePhotosetSelectionChange.bind(this);
     this.handleMapChange = this.handleMapChange.bind(this);
+    this.reloadPhotos = _.debounce(this.reloadPhotos.bind(this), 1000);
 
     this.state = {
       photos: [],
