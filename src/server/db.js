@@ -159,19 +159,23 @@ export function searchPhotos(query) {
   };
 
   return db.any(queryTemplate, params)
-  .then(data => _.map(data, obj => {
-    const url_tmp = `https://farm${obj.farm}.staticflickr.com/${obj.server}/${obj.id}_${obj.secret}`;
-    return {
-      title: obj.title,
-      date: obj.date_taken,
-      latitude: obj.latitude,
-      longitude: obj.longitude,
-      large: `${url_tmp}_h.jpg`,
-      medium: `${url_tmp}.jpg`,
-      square: `${url_tmp}_q.jpg`,
-      photoset: obj.photoset_id,
-    };
-  }));
+  .then(data => _.map(data, obj => ({
+    id: obj.id,
+    title: obj.title,
+    date: obj.date_taken,
+    latitude: obj.latitude,
+    longitude: obj.longitude,
+    large: createFlickrPhotoUrl(obj, 'h'),
+    medium: createFlickrPhotoUrl(obj),
+    thumbnail: createFlickrPhotoUrl(obj, 'q'),
+    photoset: obj.photoset_id,
+  })));
+}
+
+function createFlickrPhotoUrl(photo, formatCharacter) {
+  const formatPostfix = formatCharacter && `_${formatCharacter}` || '';
+
+  return `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}${formatPostfix}.jpg`;
 }
 
 export function getPhotosets() {
