@@ -177,20 +177,24 @@ function getPhotoSelectionSql(queryParameters) {
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
   FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
   WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) AND \
-  (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position))';
+  (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
+  ORDER BY p.date_taken';
   } else if (queryParameters.photosets) {
     return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
   FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
-  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv}))';
+  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) \
+  ORDER BY p.date_taken';
   } else if (hasGeoData) {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
-  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position))';
+  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
+  ORDER BY p.date_taken';
   } else {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
-  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate})';
+  FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) \
+  ORDER BY p.date_taken';
   }
 }
 
