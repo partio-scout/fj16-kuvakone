@@ -60,7 +60,7 @@ html, body {
       input {
         margin: 0 1em 0 0;
         position: relative;
-        top: -1px;
+        top: -2px;
       }
     }
   }
@@ -107,6 +107,25 @@ html, body {
         margin: 0.5em;
         float: left;
         cursor: pointer;
+        position: relative;
+
+        &:before {
+          content: '';
+          background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgNjEyLjA4IDYxMi4wOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNjEyLjA4IDYxMi4wODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0yMzcuOTM5LDBDMTA2LjU2NywwLDAuMDQ3LDEwNi41MiwwLjA0NywyMzcuODkzYzAsMTMxLjM3MywxMDYuNTIsMjM3Ljg5MywyMzcuODkzLDIzNy44OTMgICAgYzUwLjUxOCwwLDk3LjM2OC0xNS43NTcsMTM1Ljg3OS00Mi41OTd2LTAuMDI4bDE3Ni40MzMsMTc2LjQzM2MzLjI3NCwzLjI3NCw4LjQ3OSwzLjM1OCwxMS44MzksMGw0Ny41NS00Ny41NTEgICAgYzMuMjc0LTMuMjc0LDMuMTA2LTguNzAzLDAtMTEuODM4TDQzMy4yMzUsMzczLjhjMjYuODQtMzguNTM5LDQyLjU5Ny04NS4zOSw0Mi41OTctMTM1LjkwN0M0NzUuODMyLDEwNi41MiwzNjkuMzEyLDAsMjM3LjkzOSwweiAgICAgTTIzNy45MzksNDE5LjgxMWMtMTAwLjQ3NSwwLTE4MS45MTgtODEuNDQzLTE4MS45MTgtMTgxLjkxOFMxMzcuNDY1LDU1Ljk3NSwyMzcuOTM5LDU1Ljk3NXMxODEuOTE4LDgxLjQ0MywxODEuOTE4LDE4MS45MTggICAgUzMzOC40MTQsNDE5LjgxMSwyMzcuOTM5LDQxOS44MTF6IiBmaWxsPSIjRkZGRkZGIi8+DQoJCTxwb2x5Z29uIHBvaW50cz0iMjUxLjkzMywxMzkuOTM3IDIyMy45NDYsMTM5LjkzNyAyMjMuOTQ2LDIyMy44OTkgMTM5Ljk4NCwyMjMuODk5IDEzOS45ODQsMjUxLjg4NiAyMjMuOTQ2LDI1MS44ODYgICAgIDIyMy45NDYsMzM1Ljg0OSAyNTEuOTMzLDMzNS44NDkgMjUxLjkzMywyNTEuODg2IDMzNS44OTYsMjUxLjg4NiAzMzUuODk2LDIyMy44OTkgMjUxLjkzMywyMjMuODk5ICAgIiBmaWxsPSIjRkZGRkZGIi8+DQoJPC9nPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+') no-repeat 50% rgba(0,0,0,.8);
+          background-size: 60px;
+          opacity: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 20;
+          transition: opacity 0.25s ease-in-out;
+        }
+        
+        &:hover:before {
+          opacity: 1;
+        }
       }
     }
   }
