@@ -97,7 +97,7 @@ export class App extends React.Component {
       <div>
         <h1>Kuvakone</h1>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
-        <MapFilter />
+        <MapFilter photos={ this.state.photos }/>
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
         <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />

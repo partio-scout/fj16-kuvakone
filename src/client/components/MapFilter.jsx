@@ -1,7 +1,8 @@
 import React from 'react';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
+import { PhotoMarker } from '../components';
 
-export function MapFilter() {
+export function MapFilter({ photos }) {
   const bounds = [
     { lat: 61.2141, lon: 25.1471 }, //ne
     { lat: 61.1985, lon: 25.1028 }, //sw
@@ -20,7 +21,16 @@ export function MapFilter() {
           bounds={ bounds }
           url="roihu_kartta.png"
         />
+        {
+          photos.map(photo => (
+            <PhotoMarker photo={ photo } />
+          ))
+        }
       </Map>
     </div>
   );
 }
+
+MapFilter.propTypes = {
+  photos: React.PropTypes.array,
+};
