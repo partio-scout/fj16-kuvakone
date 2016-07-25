@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { request } from '../utils';
-import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter } from '../components';
+import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
 
 export class App extends React.Component {
   constructor(props) {
@@ -97,6 +97,7 @@ export class App extends React.Component {
       <div>
         <h1>Kuvakone</h1>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
+        <MapFilter />
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
         <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />
