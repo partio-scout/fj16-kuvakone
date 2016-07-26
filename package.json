@@ -25,6 +25,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-register": "^6.9.0",
     "bluebird": "^3.4.1",
+    "cors": "^2.7.1",
     "css-loader": "^0.23.1",
     "eslint": "^3.1.1",
     "eslint-plugin-react": "^5.2.2",
