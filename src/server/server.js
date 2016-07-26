@@ -16,18 +16,16 @@ app.use(express.static('src/public'));
 
 app.get('/photos',(req,res) => {
   dbUtils.searchPhotos(req.query)
-  .then(result => res.json(result))
-  .catch(error => {
-    res.send(error);
+  .then(result => res.json(result), error => {
+    res.status(500).send(error);
     console.log(error);
   });
 });
 
 app.get('/photosets', (req, res) => {
   dbUtils.getPhotosets()
-  .then(ps => res.json(ps))
-  .catch(e => {
-    res.send(e);
+  .then(ps => res.json(ps), e => {
+    res.status(500).send(e);
     console.log(e);
   });
 });
@@ -42,8 +40,7 @@ app.get('/loadPhotos', (req, response) => {
     .then(photosets => dbUtils.upsertPhotosets(photosets))) // update photosets
   .tap(flickr => flickrUtis.getPhotoSetPhotoIds(flickr)
     .then(photoIds => dbUtils.reCreatePhotosetPhotos(photoIds)))   // map photos to photosets
-  .then(() => response.send('OK'))
-  .catch(e => console.error(e));
+  .then(() => response.send('OK'), e => console.error(e));
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
