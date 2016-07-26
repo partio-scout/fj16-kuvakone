@@ -26,7 +26,7 @@ export class MapFilter extends React.Component {
     } = this.props;
 
     return (
-      <div>
+      <div className="map">
         <Map
           center={ { lat: 61.207459, lon: 25.121329 } }
           zoom={ 15 }
