@@ -165,6 +165,7 @@ export function searchPhotos(query) {
     large: createFlickrPhotoUrl(obj, 'h'),
     medium: createFlickrPhotoUrl(obj),
     thumbnail: createFlickrPhotoUrl(obj, 'q'),
+    photoPageUrl: createFlickrPhotoPageUrl(obj),
     photoset: obj.photoset_id,
   })));
 }
@@ -174,25 +175,25 @@ function getPhotoSelectionSql(queryParameters) {
 
   if (queryParameters.photosets && hasGeoData) {
     return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
-  p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
+  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
   FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
   WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) AND \
   (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
   ORDER BY p.date_taken';
   } else if (queryParameters.photosets) {
     return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
-  p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
+  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
   FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
   WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) \
   ORDER BY p.date_taken';
   } else if (hasGeoData) {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
-  p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
+  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
   FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
   ORDER BY p.date_taken';
   } else {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
-  p.secret as secret, p.id as id, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
+  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
   FROM photos p WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) \
   ORDER BY p.date_taken';
   }
@@ -202,6 +203,10 @@ function createFlickrPhotoUrl(photo, formatCharacter) {
   const formatPostfix = formatCharacter && `_${formatCharacter}` || '';
 
   return `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}${formatPostfix}.jpg`;
+}
+
+function createFlickrPhotoPageUrl(photo) {
+  return `https://www.flickr.com/photos/${photo.owner}/${photo.id}`;
 }
 
 export function getPhotosets() {
