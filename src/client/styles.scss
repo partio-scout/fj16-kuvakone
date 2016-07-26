@@ -37,6 +37,7 @@ html, body {
   color: $white;
   font: $base-font-size/1 $aleo;
   padding: 1em;
+  position: relative;
   
   background: url('/img/bg.svg') 0 0 no-repeat $purple;;
   
@@ -63,11 +64,34 @@ html, body {
         top: -2px;
       }
     }
+    
+    @media (min-width: $small) {
+      width: 30%;
+      float: left;
+      margin: 0;
+      padding: 0 1em;
+      box-sizing: border-box;
+      margin-bottom: 2em;
+    }
+  }
+  
+  .map {
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+    
+    @media (min-width: $small) {
+      padding: 0;
+      width: 70%;
+      float: right;
+      margin-bottom: 2em;
+    }
   }
   
   .rheostat-horizontal {
     height: 50px;
-    margin: 1em;
+    margin: 2em 1em 3em;
+    clear: both;
     
     & > div:not(.rheostat-background):not(.rheostat-handle):not(.rheostat-progress) {
       width: 50px;
