@@ -1,5 +1,6 @@
 import React from 'react';
 import Lightbox from 'react-image-lightbox';
+import { FlickrLink } from '../components';
 
 export function PhotoViewer({ isVisible, photos, selectedPhotoIndex, onSelectionChanged }) {
   const nextIndex = (selectedPhotoIndex + 1) % photos.length;
@@ -18,6 +19,11 @@ export function PhotoViewer({ isVisible, photos, selectedPhotoIndex, onSelection
         onCloseRequest={ closeLightBox }
         onMoveNextRequest={ selectNextPhoto }
         onMovePrevRequest={ selectPreviousPhoto }
+        toolbarButtons={
+          [
+            <FlickrLink url={ currentPhoto.photoPageUrl } />,
+          ]
+        }
       />
     );
   } else {
