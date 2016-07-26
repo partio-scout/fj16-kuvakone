@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { request } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
 
-const host = window.fj16_kuvakone_host || '';
+const host = process.env.HOST || '';
 
 export class App extends React.Component {
   constructor(props) {
