@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import { request } from '../utils';
-import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter, getTranslatedString } from '../components';
+import { request, getTranslatedString } from '../utils';
+import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
 
 const host = process.env.HOST || '';
 

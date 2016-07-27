@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { getCurrentLanguage, getTranslatedString } from '../components';
+import { getCurrentLanguage, getTranslatedString } from '../utils';
 
 export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
   return (
