@@ -7,7 +7,7 @@ BEGIN;
     farm text NOT NULL,
     title text NOT NULL,
     date_taken timestamp with time zone NOT NULL,
-    position geography(POINT,4326));    
+    position geography(POINT,4326));
 
   CREATE TABLE photosets (
     id text NOT NULL PRIMARY KEY,
