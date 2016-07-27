@@ -1,9 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import { request, getTranslatedString } from '../utils';
+import { request, host, getTranslatedString } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
-
-const host = process.env.HOST || '';
 
 export class App extends React.Component {
   constructor(props) {
