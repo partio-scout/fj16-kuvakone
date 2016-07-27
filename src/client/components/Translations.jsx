@@ -4,7 +4,6 @@ export function getCurrentLanguage() {
   return document.documentElement.lang || 'fi';
 }
 
-
 export function getTranslatedString(string) {
   const lang = getCurrentLanguage();
 
@@ -22,12 +21,6 @@ export function getTranslatedString(string) {
       'description': 'Mauris sed libero. Suspendisse facilisis nulla in lacinia laoreet, lorem velit accumsan velit vel mattis libero nisl et sem. Proin interdum maecenas massa turpis sagittis in, interdum non lobortis vitae massa.',
     }
   };
-  
-  console.log(lang);
-  console.log(string);
-  console.log(strings);
-  console.log(strings[lang]);
-  console.log(strings[lang][string]);
-  
+
   return strings[lang][string];
 }
