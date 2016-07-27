@@ -6,11 +6,8 @@ export function Thumbnails({ photos, onSelected }) {
       {
         photos.map((photo, index) => (
           <a onClick={ function() { onSelected(index); } } key={ index }>
-            <img
-              src={ photo.thumbnail }
-              srcSet={ `${ photo.thumbnail } 150w, ${ photo.medium } 500w` }
-              sizes="(min-width: 501px) 150px, 100vw"
-            />
+            <img src={ photo.thumbnail } className="thumbnail "/>
+            <img src={ photo.medium } className="medium "/>
           </a>
         ))
       }
