@@ -1,9 +1,11 @@
 //import { HotModuleReplacementPlugin } from 'webpack';
 import path from 'path';
+import webpack from 'webpack';
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'src', 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'client', 'main.jsx');
+const hostname = process.env.HOST || '';
 
 export default {
   context: __dirname,
@@ -46,5 +48,13 @@ export default {
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file' },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=10000&minetype=image/svg+xml' },
     ],
+  },
+  plugins: [
+    new webpack.EnvironmentPlugin([
+      'HOST',
+    ]),
+  ],
+  sassLoader: {
+    data: `$host: '${hostname}';`,
   },
 };

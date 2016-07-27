@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import { PhotoMarker } from '../components';
+import { host } from '../utils';
 
 export class MapFilter extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ export class MapFilter extends React.Component {
                 { lat: 61.1985, lon: 25.1028 }, // South-west
               ]
             }
-            url="roihu_kartta.png"
+            url={ `${host}/img/roihu_kartta.png` }
           />
           {
             photos.map(photo => (

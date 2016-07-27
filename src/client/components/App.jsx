@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { request } from '../utils';
+import { request, host, getTranslatedString } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter, BottomWatcher } from '../components';
 
 const IMAGES_PER_PAGE = 50;
@@ -53,14 +53,14 @@ export class App extends React.Component {
   }
 
   reloadPhotos() {
-    request.get('/photos')
+    request.get(`${host}/photos`)
       .accept('application/json')
       .query(this.getQueryFilters())
       .then(response => this.setState({ photos: response.body, imageCount: IMAGES_PER_PAGE }));
   }
 
   loadPhotoSets() {
-    request.get('/photosets')
+    request.get(`${host}/photosets`)
       .accept('application/json')
       .then(response => this.setState({ photosets: response.body }));
   }
@@ -114,9 +114,12 @@ export class App extends React.Component {
   }
 
   render() {
+    const title = getTranslatedString('title');
+    const description = getTranslatedString('description');
     return (
       <div>
-        <h1>Kuvakone</h1>
+        <h1>{ title }</h1>
+        <p>{ description }</p>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
         <MapFilter photos={ this.state.photos } onChange={ this.handleMapChange } />
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />

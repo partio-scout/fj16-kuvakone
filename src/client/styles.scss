@@ -19,7 +19,8 @@ $purple: #b80170;
 
 $black: #000;
 $white: #fff;
-$grey: #dbdbdb;
+$grey: #e4e4e4;
+$gray: $grey;
 
 // Breakpoints
 
@@ -34,13 +35,12 @@ html, body {
 }
 
 #kuvakone {
-  color: $white;
+  color: $black;
+  background: $white;
   font: $base-font-size/1 $aleo;
   padding: 1em;
   position: relative;
-  
-  background: url('/img/bg.svg') 0 0 no-repeat $purple;;
-  
+
   & > div {
     max-width: $large;
     margin: 0 auto;
@@ -49,6 +49,15 @@ html, body {
   h1 {
     margin: 1em 1rem;
     font-family: $exo;
+  }
+  
+  h3 {
+    margin-top: 0;
+  }
+  
+  p {
+    margin: 1em 1em 3em;
+    line-height: 1.618;
   }
   
   .photoset-filters {
@@ -95,26 +104,25 @@ html, body {
     
     .rheostat-background {
       border: none;
-      /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#d7e02c+0,b8d622+23,b8d622+23,9729db+23,da7be5+72,da7be5+72,8fe079+72,da7be5+72,9729db+72,8fe079+99 */
-      background: #white; /* Old browsers */
-      background: -moz-linear-gradient(left,  $yellow 0%, $yellow 28.3%, $green 28.3%, $green 84.3%, $red 84.3%, $red 100%); /* FF3.6-15 */
-      background: -webkit-linear-gradient(left,  $yellow 0%, $yellow 28.3%, $green 28.3%, $green 84.3%, $red 84.3%, $red 100%); /* Chrome10-25,Safari5.1-6 */
-      background: linear-gradient(to right,  $yellow 0%, $yellow 28.3%, $green 28.3%, $green 84.3%, $red 84.3%, $red 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      background: $grey;
     }
     
     .rheostat-progress {
       height: 15px;
       top: 0;
-      background: rgba(255,255,255,.85);
+      background: $purple;
     }
     
     .rheostat-handle {
       position: absolute;
       border-radius: 0;
+      width: 32px;
+      height: 37px;
       border: none;
-      transform: rotate(45deg);
-      box-shadow: 0 0 1px 0 rgba(0,0,0,.7);
-
+      background: url('#{$host}/img/handle@2x.png') 0 0 no-repeat transparent;
+      background-size: 32px;
+      margin: -7px 0 0 -16px;
+      
       &:before, &:after {
         content: none;
         display: none;
@@ -143,10 +151,16 @@ html, body {
         height: auto;
         margin: 0 auto;
       }
+      
+      img.thumbnail {
+        display: none;
+      }
     }
     
     @media (min-width: 501px) {
-      margin: 0;
+      margin: 0 -1em;
+      padding: 1em 1em;
+      background: url('#{$host}/img/bg.svg') 0 0 no-repeat $purple;
       
       &:after {
         content: ' ';
@@ -161,6 +175,13 @@ html, body {
         float: left;
         cursor: pointer;
         position: relative;
+        
+        img.thumbnail {
+          display: block;
+        }
+        img.medium {
+          display: none;
+        }
 
         &:before {
           content: '';
@@ -186,4 +207,9 @@ html, body {
 
 .ReactModalPortal {
   font-family: $aleo;
+  
+  .flickr-logo {
+    position: relative;
+    top: 7px;
+  }
 }

@@ -49,6 +49,17 @@ export function updatePhotos(photos) {
   });
 }
 
+export function deletePhotos(idsToDelete) {
+  const db = pgp(process.env.DATABASE_URL);
+
+  if (!idsToDelete || _.isEmpty(idsToDelete)) {
+    return Promise.resolve();
+  } else {
+    const template = 'DELETE FROM photos WHERE id IN (${toDelete:csv})';
+    return db.none(template, { toDelete: idsToDelete || null });
+  }
+}
+
 export function upsertPhotos(photos) {
   const db = pgp(process.env.DATABASE_URL);
 
@@ -57,10 +68,12 @@ export function upsertPhotos(photos) {
   .then(ids => {
     const toCreate = _.filter(photos, photo => (!_.includes(ids, photo.id)));
     const toUpdate = _.filter(photos, photo => (_.includes(ids, photo.id)));
+    const toDelete = _.difference(ids, _.map(photos, p => p.id));
 
     return Promise.join(
       insertPhotos(toCreate),
-      updatePhotos(toUpdate)
+      updatePhotos(toUpdate),
+      deletePhotos(toDelete)
     );
   });
 }
@@ -99,16 +112,29 @@ export function updatePhotosets(photosets) {
   });
 }
 
+export function deletePhotosets(idsToDelete) {
+  const db = pgp(process.env.DATABASE_URL);
+
+  if (!idsToDelete || _.isEmpty(idsToDelete)) {
+    return Promise.resolve();
+  } else {
+    const template = 'DELETE FROM photosets WHERE id IN (${toDelete:csv})';
+    return db.none(template, { toDelete: idsToDelete || null });
+  }
+}
+
 export function upsertPhotosets(photosets) {
   photosets = photosets.photosets.photoset;
   getPhotosetIds()
   .then(ids => {
     const toCreate = _.filter(photosets, photoset => (!_.includes(ids, photoset.id)));
     const toUpdate = _.filter(photosets, photoset => (_.includes(ids, photoset.id)));
+    const toDelete = _.difference(ids, _.map(photosets, p => p.id));
 
     return Promise.join(
       insertPhotosets(toCreate),
-      updatePhotosets(toUpdate)
+      updatePhotosets(toUpdate),
+      deletePhotosets(toDelete)
     );
   });
 }
@@ -137,6 +163,12 @@ export function reCreatePhotosetPhotos(photosetPhotos) {
       });
       return t.batch(queries);
     }));
+}
+
+export function truncatePhotosetMappings() {
+  const db = pgp(process.env.DATABASE_URL);
+
+  return db.none('TRUNCATE photoset_photos');
 }
 
 export function searchPhotos(query) {
@@ -212,5 +244,5 @@ function createFlickrPhotoPageUrl(photo) {
 export function getPhotosets() {
   const db = pgp(process.env.DATABASE_URL);
 
-  return db.query('SELECT id, title FROM photosets');
+  return db.query('SELECT id, title, title_sv, title_en FROM photosets');
 }

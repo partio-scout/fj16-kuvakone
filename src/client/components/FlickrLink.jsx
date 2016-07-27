@@ -1,9 +1,10 @@
 import React from 'react';
+import { host } from '../utils';
 
 export function FlickrLink({ url }) {
   return (
-    <a href={ url }>
-      <img src="flickr-black.png" />
+    <a href={ url } className="flickr-logo">
+      <img src={ `${host}/img/flickr-black.png` } />
     </a>
   );
 }
