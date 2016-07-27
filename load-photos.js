@@ -11,6 +11,7 @@ const flickrTokenOnly = Promise.promisify(Flickr.tokenOnly);
 
 flickrTokenOnly(flickrOptions)
 .tap(() => console.log('Fetching photos'))
+.tap(() => dbUtils.truncatePhotosetMappings())
 .tap(flickr => flickrUtis.getPublicPhotos(flickr)
   .then(photos => dbUtils.upsertPhotos(photos)))          // update photos
 .tap(() => console.log('Fetching photosets'))
