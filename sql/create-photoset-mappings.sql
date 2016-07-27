@@ -1,5 +1,7 @@
 BEGIN;
 
+  TRUNCATE photoset_group, photoset_group_mapping;
+
   INSERT INTO photoset_group (id, title, title_en, title_sv) VALUES ('1', 'Rakennusleiri', 'SV Rakennusleiri', 'EN Rakennusleiri');
   INSERT INTO photoset_group (id, title, title_en, title_sv) VALUES ('2', 'Leiri', 'SV Leiri', 'EN Leiri');
   INSERT INTO photoset_group (id, title, title_en, title_sv) VALUES ('3', 'Avajaiset', 'SV Avajaiset', 'EN Avajaiset');
@@ -13,6 +15,7 @@ BEGIN;
   INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES ('2', '72157670786425911');
   INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES ('2', '72157671344045826');
   INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES ('2', '72157670657022721');
+  INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES ('2', '72157671632611595');
   INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES ('3', '72157670599576341');
 
 COMMIT;
