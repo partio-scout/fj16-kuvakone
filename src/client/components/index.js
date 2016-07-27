@@ -7,3 +7,4 @@ export { PhotosetFilter } from './PhotosetFilter';
 export { MapFilter } from './MapFilter';
 export { PhotoMarker } from './PhotoMarker';
 export { FlickrLink } from './FlickrLink';
+export { BottomWatcher } from './BottomWatcher';

@@ -1,10 +1,10 @@
 import React from 'react';
 
-export function Thumbnails({ photos, onSelected }) {
+export function Thumbnails({ photos, imageCount, onSelected }) {
   return (
     <div className="thumbnails">
       {
-        photos.map((photo, index) => (
+        photos.slice(0, imageCount).map((photo, index) => (
           <a onClick={ function() { onSelected(index); } } key={ index }>
             <img
               src={ photo.thumbnail }
