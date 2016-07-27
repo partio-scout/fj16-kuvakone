@@ -1,12 +1,15 @@
 import React from 'react';
 import _ from 'lodash';
+import { getCurrentLanguage, getTranslatedString } from '../utils';
 
 export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
   return (
     <div className="photoset-filters">
+      <h3>{ getTranslatedString('select-photoset') }</h3>
       {
         photosets.map(photoset => {
           const checked = _.includes(selectedPhotosetIds, photoset.id);
+          const titleKey = ( getCurrentLanguage() == 'fi' ? 'title' : `title_${getCurrentLanguage()}` );
           return (
             <label key={ photoset.id }>
               <input
@@ -19,7 +22,7 @@ export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
                   }
                 }
               />
-              { photoset.title }
+              { photoset[titleKey] || photoset.title }
             </label>
           );
         })
