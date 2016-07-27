@@ -49,6 +49,17 @@ export function updatePhotos(photos) {
   });
 }
 
+export function deletePhotos(idsToDelete) {
+  const db = pgp(process.env.DATABASE_URL);
+  console.log('del', idsToDelete);
+  if (!idsToDelete || _.isEmpty(idsToDelete)) {
+    return Promise.resolve();
+  } else {
+    const template = 'DELETE FROM photos WHERE id IN (${toDelete:csv})';
+    return db.none(template, { toDelete: idsToDelete || null });
+  }
+}
+
 export function upsertPhotos(photos) {
   const db = pgp(process.env.DATABASE_URL);
 
@@ -57,10 +68,12 @@ export function upsertPhotos(photos) {
   .then(ids => {
     const toCreate = _.filter(photos, photo => (!_.includes(ids, photo.id)));
     const toUpdate = _.filter(photos, photo => (_.includes(ids, photo.id)));
+    const toDelete = _.filter(ids, id => (!_.includes(_.map(photos, photo => photo.id), id)));
 
     return Promise.join(
       insertPhotos(toCreate),
-      updatePhotos(toUpdate)
+      updatePhotos(toUpdate),
+      deletePhotos(toDelete)
     );
   });
 }
