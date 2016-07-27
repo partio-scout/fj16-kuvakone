@@ -45,7 +45,7 @@ export class MapFilter extends React.Component {
                 { lat: 61.1985, lon: 25.1028 }, // South-west
               ]
             }
-            url="roihu_kartta.png"
+            url="img/roihu_kartta.png"
           />
           {
             photos.map(photo => (
