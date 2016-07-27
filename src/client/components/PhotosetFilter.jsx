@@ -9,8 +9,7 @@ export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
       {
         photosets.map(photoset => {
           const checked = _.includes(selectedPhotosetIds, photoset.id);
-          const title = photoset[`title${ ( getCurrentLanguage() == 'fi' ? '' : `_${getCurrentLanguage()}` ) }`];
-          console.log(`title${ ( getCurrentLanguage() == 'fi' ? '' : `_${getCurrentLanguage()}` ) }`);
+          const title = photoset[`title${ ( getCurrentLanguage() == 'fi' ? '' : `_${getCurrentLanguage()}` ) }`] || photoset.title;
           return (
             <label key={ photoset.id }>
               <input
