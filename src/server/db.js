@@ -187,18 +187,31 @@ function getPhotoSelectionSql(queryParameters) {
   const hasGeoData = queryParameters.bounds && queryParameters.bounds.north && queryParameters.bounds.south && queryParameters.bounds.west && queryParameters.bounds.east;
 
   if (queryParameters.photosets && hasGeoData) {
-    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
-  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
-  FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
-  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) AND \
-  (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
-  ORDER BY p.date_taken';
-  } else if (queryParameters.photosets) {
-    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
+    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken, p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
   FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
   WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) \
-  ORDER BY p.date_taken';
+  AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p.position)) \
+  UNION \
+  SELECT DISTINCT p2.title as title, p2.date_taken as date_taken, p2.farm as farm, p2.server as server, \
+  p2.secret as secret, p2.id as id, p2.owner as owner, ST_X(p2.position::geometry) as longitude, ST_Y(p2.position::geometry) as latitude, pp2.photoset_id as photoset_id \
+  FROM photos p2 JOIN photoset_photos pp2 ON p2.id=pp2.photo_id \
+  RIGHT OUTER JOIN photoset_group_mapping pgm ON pp2.photoset_id=pgm.photoset_id \
+  WHERE (p2.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pgm.group_id IN (${photosets:csv})) \
+  AND (ST_Intersects(ST_GeographyFromText(\'SRID=4326;POLYGON((${west} ${south},${west} ${north},${east} ${north},${east} ${south}, ${west} ${south}))\'), p2.position)) \
+  ORDER BY date_taken';
+  } else if (queryParameters.photosets) {
+    return 'SELECT DISTINCT p.title as title, p.date_taken as date_taken, p.farm as farm, p.server as server, \
+  p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude, pp.photoset_id as photoset_id \
+  FROM photos p JOIN photoset_photos pp ON p.id=pp.photo_id \
+  WHERE (p.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pp.photoset_id IN (${photosets:csv})) \
+  UNION \
+  SELECT DISTINCT p2.title as title, p2.date_taken as date_taken, p2.farm as farm, p2.server as server, \
+  p2.secret as secret, p2.id as id, p2.owner as owner, ST_X(p2.position::geometry) as longitude, ST_Y(p2.position::geometry) as latitude, pp2.photoset_id as photoset_id \
+  FROM photos p2 JOIN photoset_photos pp2 ON p2.id=pp2.photo_id \
+  RIGHT OUTER JOIN photoset_group_mapping pgm ON pp2.photoset_id=pgm.photoset_id \
+  WHERE (p2.date_taken BETWEEN ${startdate} AND ${enddate}) AND (pgm.group_id IN (${photosets:csv})) \
+  ORDER BY date_taken';
   } else if (hasGeoData) {
     return 'SELECT p.title as title, p.date_taken as date_taken , p.farm as farm, p.server as server, \
   p.secret as secret, p.id as id, p.owner as owner, ST_X(p.position::geometry) as longitude, ST_Y(p.position::geometry) as latitude \
@@ -225,5 +238,9 @@ function createFlickrPhotoPageUrl(photo) {
 export function getPhotosets() {
   const db = pgp(process.env.DATABASE_URL);
 
-  return db.query('SELECT id, title, title_sv, title_en FROM photosets');
+  const query = 'SELECT ps.id, ps.title, ps.title_sv, ps.title_en FROM photosets ps \
+  WHERE ps.id NOT IN (SELECT DISTINCT photoset_id FROM photoset_group_mapping) \
+  UNION \
+  SELECT pgm.id, pgm.title, pgm.title_sv, pgm.title_en FROM photoset_group pgm';
+  return db.query(query);
 }
