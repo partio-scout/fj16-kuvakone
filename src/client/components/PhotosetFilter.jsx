@@ -9,7 +9,7 @@ export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
       {
         photosets.map(photoset => {
           const checked = _.includes(selectedPhotosetIds, photoset.id);
-          const title = photoset[`title${ ( getCurrentLanguage() == 'fi' ? '' : `_${getCurrentLanguage()}` ) }`] || photoset.title;
+          const titleKey = ( getCurrentLanguage() == 'fi' ? 'title' : `title_${getCurrentLanguage()}` );
           return (
             <label key={ photoset.id }>
               <input
@@ -22,7 +22,7 @@ export function PhotosetFilter({ onChange, photosets, selectedPhotosetIds }) {
                   }
                 }
               />
-              { title }
+              { photoset[titleKey] || photoset.title }
             </label>
           );
         })
