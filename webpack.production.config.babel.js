@@ -1,4 +1,6 @@
 import path from 'path';
+import webpack from 'webpack';
+
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'src', 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'client', 'main.jsx');
@@ -48,6 +50,6 @@ export default {
     ]),
   ],
   sassLoader: {
-    data: "$host: '" + process.env.HOST + "';"
+    data: "$host: '" + (process.env.HOST || '') + "';"
   }
 };

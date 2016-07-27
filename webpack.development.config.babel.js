@@ -54,6 +54,6 @@ export default {
     ]),
   ],
   sassLoader: {
-    data: "$host: '" + process.env.HOST + "';"
+    data: "$host: '" + (process.env.HOST || '') + "';"
   }
 };
