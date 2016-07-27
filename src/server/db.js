@@ -68,7 +68,7 @@ export function upsertPhotos(photos) {
   .then(ids => {
     const toCreate = _.filter(photos, photo => (!_.includes(ids, photo.id)));
     const toUpdate = _.filter(photos, photo => (_.includes(ids, photo.id)));
-    const toDelete = _.filter(ids, id => (!_.includes(_.map(photos, photo => photo.id), id)));
+    const toDelete = _.difference(ids, _.map(photos, p => p.id));
 
     return Promise.join(
       insertPhotos(toCreate),
