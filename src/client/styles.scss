@@ -51,8 +51,9 @@ html, body {
     font-family: $exo;
   }
   
-  & > p {
-    margin: 1em 1rem;
+  p {
+    margin: 1em 1em 3em;
+    line-height: 1.618;
   }
   
   .photoset-filters {
