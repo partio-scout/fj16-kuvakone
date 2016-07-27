@@ -51,7 +51,7 @@ export function updatePhotos(photos) {
 
 export function deletePhotos(idsToDelete) {
   const db = pgp(process.env.DATABASE_URL);
-  console.log('del', idsToDelete);
+
   if (!idsToDelete || _.isEmpty(idsToDelete)) {
     return Promise.resolve();
   } else {
