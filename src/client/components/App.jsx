@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { request, host, getTranslatedString } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter, BottomWatcher } from '../components';
 
-const IMAGES_PER_PAGE = 50;
+const IMAGES_PER_PAGE = window.innerWidth < 500 ? 20 : 50;
 
 export class App extends React.Component {
   constructor(props) {
