@@ -263,3 +263,17 @@ export function getPhotosets() {
   SELECT pgm.id, pgm.title, pgm.title_sv, pgm.title_en FROM photoset_group pgm';
   return db.query(query);
 }
+
+export function getPhotoInfoAWS() {
+  const db = pgp(process.env.DATABASE_URL);
+
+  return db.query('SELECT id, farm, server, secret FROM photos')
+  .then(photos => _.map(photos, photo => ({
+    medium: createFlickrPhotoUrl(photo),
+    large: createFlickrPhotoUrl(photo, 'h'),
+    thumbnail: createFlickrPhotoUrl(photo, 'q'),
+    name: `${photo.id}.jpg`,
+    name_large: `${photo.id}_h.jpg`,
+    name_thumbnail: `${photo.id}_q.jpg`,
+  })));
+}
