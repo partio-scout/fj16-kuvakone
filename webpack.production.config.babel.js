@@ -46,10 +46,10 @@ export default {
   },
   plugins: [
     new webpack.EnvironmentPlugin([
-      "HOST"
+      'HOST',
     ]),
   ],
   sassLoader: {
-    data: "$host: '" + (process.env.HOST || '') + "';"
-  }
+    data: `$host: '${(process.env.HOST || '')} ';`,
+  },
 };
