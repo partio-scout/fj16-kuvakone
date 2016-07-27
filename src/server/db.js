@@ -212,5 +212,5 @@ function createFlickrPhotoPageUrl(photo) {
 export function getPhotosets() {
   const db = pgp(process.env.DATABASE_URL);
 
-  return db.query('SELECT id, title FROM photosets');
+  return db.query('SELECT id, title, title_sv, title_en FROM photosets');
 }

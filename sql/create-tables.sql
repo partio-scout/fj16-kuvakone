@@ -11,7 +11,9 @@ BEGIN;
 
   CREATE TABLE photosets (
     id text NOT NULL PRIMARY KEY,
-    title text NOT NULL);
+    title text NOT NULL,
+    title_en text,
+    title_sv text);
 
   CREATE TABLE photoset_photos (
     photo_id text NOT NULL REFERENCES photos(id) ON DELETE CASCADE,
