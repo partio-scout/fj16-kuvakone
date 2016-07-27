@@ -2,6 +2,7 @@ import React from 'react';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import { PhotoMarker } from '../components';
 import { host } from '../utils';
+import _ from 'lodash';
 
 export class MapFilter extends React.Component {
   constructor(props) {
@@ -49,9 +50,12 @@ export class MapFilter extends React.Component {
             url={ `${host}/img/roihu_kartta.png` }
           />
           {
-            photos.map(photo => (
-              <PhotoMarker photo={ photo } />
-            ))
+            _(photos)
+              .filter((photo, index) => index % nth === 0 || nth === 1)
+              .map(photo => (
+                <PhotoMarker photo={ photo } />
+              ))
+              .value()
           }
         </Map>
       </div>
