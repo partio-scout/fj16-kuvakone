@@ -19,4 +19,12 @@ BEGIN;
   INSERT INTO photoset_photos (photo_id, photoset_id) VALUES ('28397009701', '3');
   INSERT INTO photoset_photos (photo_id, photoset_id) VALUES ('27859188003', '3');
   INSERT INTO photoset_photos (photo_id, photoset_id) VALUES ('28191966400', '3');
+
+  INSERT INTO photoset_group (title, title_en, title_sv) VALUES ('Rakennusleiri', 'SV Rakennusleiri', 'EN Rakennusleiri');
+  INSERT INTO photoset_group (title, title_en, title_sv) VALUES ('Leiri', 'SV Leiri', 'EN Leiri');
+  INSERT INTO photoset_group (title, title_en, title_sv) VALUES ('Avajaiset', 'SV Avajaiset', 'EN Avajaiset');
+
+  INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES (1, '1');
+  INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES (1, '2');
+  INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES (2, '3');
 COMMIT;
