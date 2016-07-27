@@ -42,4 +42,12 @@ export default {
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=10000&minetype=image/svg+xml' },
     ],
   },
+  plugins: [
+    new webpack.EnvironmentPlugin([
+      "HOST"
+    ]),
+  ],
+  sassLoader: {
+    data: "$host: '" + process.env.HOST + "';"
+  }
 };

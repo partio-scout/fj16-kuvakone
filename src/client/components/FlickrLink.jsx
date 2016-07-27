@@ -3,7 +3,7 @@ import React from 'react';
 export function FlickrLink({ url }) {
   return (
     <a href={ url }>
-      <img src="flickr-black.png" />
+      <img src={ `${process.env.HOST}/flickr-black.png` } />
     </a>
   );
 }

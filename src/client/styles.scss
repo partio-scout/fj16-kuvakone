@@ -38,9 +38,9 @@ html, body {
   font: $base-font-size/1 $aleo;
   padding: 1em;
   position: relative;
-  
-  background: url('/img/bg.svg') 0 0 no-repeat $purple;;
-  
+
+  background: url('#{$host}/img/bg.svg') 0 0 no-repeat $purple;
+
   & > div {
     max-width: $large;
     margin: 0 auto;

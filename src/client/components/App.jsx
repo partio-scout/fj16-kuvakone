@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { request } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter } from '../components';
 
+const host = process.env.HOST || '';
+
 export class App extends React.Component {
   constructor(props) {
     super(props);
@@ -49,14 +51,14 @@ export class App extends React.Component {
   }
 
   reloadPhotos() {
-    request.get('/photos')
+    request.get(`${host}/photos`)
       .accept('application/json')
       .query(this.getQueryFilters())
       .then(response => this.setState({ photos: response.body }));
   }
 
   loadPhotoSets() {
-    request.get('/photosets')
+    request.get(`${host}/photosets`)
       .accept('application/json')
       .then(response => this.setState({ photosets: response.body }));
   }
