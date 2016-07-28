@@ -1,3 +1,4 @@
+import newrelic from 'newrelic';
 import express from 'express';
 import * as dbUtils from './db';
 import cors from 'cors';
