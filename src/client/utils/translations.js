@@ -9,7 +9,7 @@ export function getTranslatedString(string) {
     'fi': {
       'title': 'Kuvat',
       'description': 'Etsitkö kuvia Hurmasta, Tempo-kahvilasta tai vaikkapa tiistain vesilaaksosta? Voit nyt selailla kuvia sijainnin, päivämäärän ja aiheen mukaan!',
-      'flickrLink': 'Katso lisää kuvia Flickristä',
+      'flickrLink': 'Katso kaikki kuvat Flickristä',
       'select-photoset': 'Rajaa aiheen mukaan',
     },
     'sv': {
@@ -21,7 +21,7 @@ export function getTranslatedString(string) {
     'en': {
       'title': 'Photos',
       'description': 'Are you looking for photos from Hurma, Tempo café or Thursday\'s creativity valley? You can now browse photos by location, date and topic.',
-      'flickrLink': 'More photos in Flickr.',
+      'flickrLink': 'Browse photos in Flickr.',
       'select-photoset': 'Filter by topic',
     }
   };
