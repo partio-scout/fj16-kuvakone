@@ -27,6 +27,8 @@ export class MapFilter extends React.Component {
       photos,
     } = this.props;
 
+    const nth = Math.ceil(photos.length / 50);
+
     return (
       <div className="map">
         <Map
