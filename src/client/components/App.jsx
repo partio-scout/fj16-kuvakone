@@ -116,10 +116,11 @@ export class App extends React.Component {
   render() {
     const title = getTranslatedString('title');
     const description = getTranslatedString('description');
+    const flickrLink = getTranslatedString('flickrLink');
     return (
       <div>
         <h1>{ title }</h1>
-        <p>{ description }</p>
+        <p>{ description } <a href="https://www.flickr.com/photos/roihu2016">{ flickrLink }</a></p>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
         <MapFilter photos={ this.state.photos } onChange={ this.handleMapChange } />
         <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
