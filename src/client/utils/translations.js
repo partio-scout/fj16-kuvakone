@@ -14,9 +14,9 @@ export function getTranslatedString(string) {
     },
     'sv': {
       'title': 'Bilder',
-      'description': '',
-      'flickrLink': 'Flickr',
-      'select-photoset': '',
+      'description': 'Söker du efter bilder från Unity eller café Live eller är du ute efter fotografier från vattendalen på tisdagen? Nu kan du söka fotografier med plats, datumoch tema.',
+      'flickrLink': 'Titta på alla bilder i Flickr',
+      'select-photoset': 'Filtrera enligt tema',
     },
     'en': {
       'title': 'Photos',
