@@ -3,9 +3,10 @@ import Promise from 'bluebird';
 import pg from 'pg-promise';
 
 const pgp = pg();
+const databaseUrl = process.env.DATABASE_URL;
 
 export function insertPhotos(photos) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const template = 'INSERT INTO photos (id, owner, secret, server, farm, title, date_taken, position) VALUES ($(id), $(owner), $(secret), $(server), $(farm), $(title), $(date_taken), ST_GeographyFromText(\'SRID=4326;POINT($(lon) $(lat))\')); ';
 
@@ -28,7 +29,7 @@ export function insertPhotos(photos) {
 }
 
 export function updatePhotos(photos) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const template = 'UPDATE photos SET owner=$(owner), secret=$(secret), server=$(server), farm=$(farm), title=$(title), date_taken=$(date_taken), position=ST_GeographyFromText(\'SRID=4326;POINT($(lon) $(lat))\') WHERE id=$(id); ';
   return db.task(t => {
@@ -50,7 +51,7 @@ export function updatePhotos(photos) {
 }
 
 export function deletePhotos(idsToDelete) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   if (!idsToDelete || _.isEmpty(idsToDelete)) {
     return Promise.resolve();
@@ -61,7 +62,7 @@ export function deletePhotos(idsToDelete) {
 }
 
 export function upsertPhotos(photos) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   return db.query('SELECT id FROM photos;')
   .then(ids => _.map(ids, id => id.id))
@@ -79,7 +80,7 @@ export function upsertPhotos(photos) {
 }
 
 export function insertPhotosets(photosets) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const template = 'INSERT INTO photosets (id, title) VALUES ($(id), $(title)); ';
 
@@ -88,15 +89,14 @@ export function insertPhotosets(photosets) {
       t.none(template, {
         id: photoset.id,
         title: photoset.title._content,
-      })
-    );
+      }));
 
     return t.batch(queries);
   });
 }
 
 export function updatePhotosets(photosets) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const template = 'UPDATE photosets SET title=$(title) WHERE id=$(id); ';
 
@@ -113,7 +113,7 @@ export function updatePhotosets(photosets) {
 }
 
 export function deletePhotosets(idsToDelete) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   if (!idsToDelete || _.isEmpty(idsToDelete)) {
     return Promise.resolve();
@@ -125,7 +125,7 @@ export function deletePhotosets(idsToDelete) {
 
 export function upsertPhotosets(photosets) {
   photosets = photosets.photosets.photoset;
-  getPhotosetIds()
+  return getPhotosetIds()
   .then(ids => {
     const toCreate = _.filter(photosets, photoset => (!_.includes(ids, photoset.id)));
     const toUpdate = _.filter(photosets, photoset => (_.includes(ids, photoset.id)));
@@ -140,14 +140,14 @@ export function upsertPhotosets(photosets) {
 }
 
 export function getPhotosetIds() {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   return db.query('SELECT id from photosets;')
   .then(ids => _.map(ids, id => id.id));
 }
 
 export function reCreatePhotosetPhotos(photosetPhotos) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const template = 'INSERT INTO photoset_photos (photo_id, photoset_id) VALUES ($(photo_id), $(photoset_id))';
   return db.none('TRUNCATE photoset_photos;')
@@ -166,13 +166,13 @@ export function reCreatePhotosetPhotos(photosetPhotos) {
 }
 
 export function truncatePhotosetMappings() {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   return db.none('TRUNCATE photoset_photos');
 }
 
 export function searchPhotos(query) {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const queryTemplate = getPhotoSelectionSql(query);
   const bounds = query.bounds || {};
@@ -255,11 +255,39 @@ function createFlickrPhotoPageUrl(photo) {
 }
 
 export function getPhotosets() {
-  const db = pgp(process.env.DATABASE_URL);
+  const db = pgp(databaseUrl);
 
   const query = 'SELECT ps.id, ps.title, ps.title_sv, ps.title_en FROM photosets ps \
   WHERE ps.id NOT IN (SELECT DISTINCT photoset_id FROM photoset_group_mapping) \
   UNION \
   SELECT pgm.id, pgm.title, pgm.title_sv, pgm.title_en FROM photoset_group pgm';
   return db.query(query);
+}
+
+export function recreatePhotosetGroupMappings(photosetGroupMappings) {
+  const db = pgp(databaseUrl);
+
+  const insertGroupTemplate = 'INSERT INTO photoset_group (id, title, title_sv, title_en) VALUES (${group_id}, ${title_fi}, ${title_sv}, ${title_en})';
+  const insertGroupMappingTemplate = 'INSERT INTO photoset_group_mapping (group_id, photoset_id) VALUES (${group_id}, ${photoset_id})';
+
+  return db.none('TRUNCATE photoset_group, photoset_group_mapping;')
+    .then(() => db.task(t => {
+      const queries = [];
+      _.forEach(photosetGroupMappings, group => {
+        queries.push(t.none(insertGroupTemplate, {
+          group_id: group.id,
+          title_fi: group.title.fi,
+          title_sv: group.title.sv,
+          title_en: group.title.en,
+        }));
+
+        _.forEach(group.photosets, photosetId => {
+          queries.push(t.none(insertGroupMappingTemplate, {
+            group_id: group.id,
+            photoset_id: photosetId,
+          }));
+        });
+      });
+      return t.batch(queries);
+    }));
 }
