@@ -1,44 +1,37 @@
 import React from 'react';
 import Rheostat from 'rheostat';
 import _ from 'lodash';
-import { DateLabel } from '../components';
+import { getDateLabel } from '../components';
+import { mapDateIndexToDate, mapDateToDateIndex } from '../utils';
 
-export function DateFilter({ startDate, endDate, onChange }) {
+export function DateFilter({ selectedStartDate, selectedEndDate, onChange, startDate, dayCount }) {
+  const DateLabel = getDateLabel(startDate, dayCount);
   return (
     <Rheostat
       min={ 0 }
-      max={ 16 }
-      values={ [ mapDateToDateIndex(startDate), mapDateToDateIndex(endDate) ] }
+      max={ dayCount }
+      values={ [ _mapDateToDateIndex(selectedStartDate), _mapDateToDateIndex(selectedEndDate) ] }
       snap
-      snapPoints={ _.range(0, 17) }
-      pitPoints={ _.range(0, 17) }
+      snapPoints={ _.range(0, dayCount + 1) }
+      pitPoints={ _.range(0, dayCount + 1) }
       pitComponent={ DateLabel }
-      onChange={ function({ values }) { onChange(mapDateIndexToDate(values[0]), mapDateIndexToDate(values[1])); } }
+      onChange={ function({ values }) { onChange(_mapDateIndexToDate(values[0]), _mapDateIndexToDate(values[1])); } }
     />
   );
+
+  function _mapDateToDateIndex(date) {
+    mapDateToDateIndex(date, dayCount);
+  }
+
+  function _mapDateIndexToDate(index) {
+    return mapDateIndexToDate(index, startDate, dayCount);
+  }
 }
 
 DateFilter.propTypes = {
   onChange: React.PropTypes.func.isRequired,
-  startDate: React.PropTypes.instanceOf(Date),
-  endDate: React.PropTypes.instanceOf(Date),
+  selectedStartDate: React.PropTypes.instanceOf(Date).isRequired,
+  selectedEndDate: React.PropTypes.instanceOf(Date).isRequired,
+  startDate: React.PropTypes.instanceOf(Date).isRequired,
+  dayCount: React.PropTypes.number.isRequired,
 };
-
-function mapDateToDateIndex(date) {
-  const dateIndex = date.getDate() - 15;
-  if (dateIndex < 0) {
-    return 0;
-  } else if (dateIndex > 16) {
-    return 16;
-  } else {
-    return dateIndex;
-  }
-}
-
-function mapDateIndexToDate(index) {
-  if (index >= 0 && index < 17) {
-    return new Date(`2016-07-${15+index}`);
-  } else {
-    return null;
-  }
-}

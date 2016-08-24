@@ -9,7 +9,7 @@ export class BottomWatcher extends React.Component {
   }
 
   handleScrollOrResize() {
-    if(this.isElementVisible()) {
+    if (this.isElementVisible()) {
       this.props.onBottomReached();
     }
   }

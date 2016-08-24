@@ -23,7 +23,7 @@ export function getTranslatedString(string) {
       'description': 'Are you looking for photos from Hurma, Tempo café or Thursday\'s creativity valley? You can now browse photos by location, date and topic.',
       'flickrLink': 'Browse photos in Flickr.',
       'select-photoset': 'Filter by topic',
-    }
+    },
   };
 
   return strings[lang][string];

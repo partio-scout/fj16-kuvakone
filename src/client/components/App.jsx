@@ -1,9 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import { request, host, getTranslatedString } from '../utils';
+import { request, host, getTranslatedString, addDays } from '../utils';
 import { Thumbnails, PhotoViewer, DateFilter, PhotosetFilter, MapFilter, BottomWatcher } from '../components';
-
-const IMAGES_PER_PAGE = window.innerWidth < 500 ? 20 : 50;
+import * as Config from '../config';
 
 export class App extends React.Component {
   constructor(props) {
@@ -21,10 +20,10 @@ export class App extends React.Component {
       photosets: [],
       selectedPhotoIndex: undefined,
       selectedPhotosetIds: [],
-      startDate: new Date('2016-07-15'),
-      endDate: new Date('2016-07-31'),
+      startDate: Config.startDate,
+      endDate: addDays(Config.startDate, Config.dayCount),
       bounds: undefined,
-      imageCount: IMAGES_PER_PAGE,
+      imageCount: Config.imagesPerPage,
     };
   }
 
@@ -56,7 +55,7 @@ export class App extends React.Component {
     request.get(`${host}/photos`)
       .accept('application/json')
       .query(this.getQueryFilters())
-      .then(response => this.setState({ photos: response.body, imageCount: IMAGES_PER_PAGE }));
+      .then(response => this.setState({ photos: response.body, imageCount: Config.imagesPerPage }));
   }
 
   loadPhotoSets() {
@@ -105,7 +104,7 @@ export class App extends React.Component {
   }
 
   handleThumbnailsBottomReached() {
-    const imageCount = this.state.imageCount += IMAGES_PER_PAGE;
+    const imageCount = this.state.imageCount + Config.imagesPerPage;
     this.setState({ imageCount: imageCount });
   }
 
@@ -122,8 +121,8 @@ export class App extends React.Component {
         <h1>{ title }</h1>
         <p>{ description } <a href="https://www.flickr.com/photos/roihu2016">{ flickrLink }</a></p>
         <PhotosetFilter onChange={ this.handlePhotosetSelectionChange } photosets={ this.state.photosets } selectedPhotosetIds={ this.state.selectedPhotosetIds } />
-        <MapFilter photos={ this.state.photos } onChange={ this.handleMapChange } />
-        <DateFilter onChange={ this.handleDateFilterChange } startDate={ this.state.startDate } endDate={ this.state.endDate } />
+        <MapFilter photos={ this.state.photos } onChange={ this.handleMapChange } initialCenter={ Config.mapInitialCenter } initialZoom={ Config.mapInitialZoom } imageOverlay={ Config.mapImageOverlay } />
+        <DateFilter onChange={ this.handleDateFilterChange } selectedStartDate={ this.state.startDate } selectedEndDate={ this.state.endDate } startDate={ Config.startDate } dayCount={ Config.dayCount } />
         <Thumbnails photos={ this.state.photos } onSelected={ this.handleThumbnailSelected } imageCount={ this.state.imageCount } />
         <BottomWatcher onBottomReached={ this.handleThumbnailsBottomReached } />
         <PhotoViewer isVisible={ this.state.selectedPhotoIndex !== undefined } photos={ this.state.photos } selectedPhotoIndex={ this.state.selectedPhotoIndex } onSelectionChanged={ this.handleThumbnailSelected } />

@@ -18,4 +18,5 @@ export function Thumbnails({ photos, imageCount, onSelected }) {
 Thumbnails.propTypes = {
   photos: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   onSelected: React.PropTypes.func.isRequired,
+  imageCount: React.PropTypes.number.isRequired,
 };
