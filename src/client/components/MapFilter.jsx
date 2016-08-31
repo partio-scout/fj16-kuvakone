@@ -1,7 +1,6 @@
 import React from 'react';
 import { Map, TileLayer, ImageOverlay } from 'react-leaflet';
 import { PhotoMarker } from '../components';
-import { host } from '../utils';
 import _ from 'lodash';
 
 export class MapFilter extends React.Component {
@@ -25,6 +24,9 @@ export class MapFilter extends React.Component {
   render() {
     const {
       photos,
+      initialCenter,
+      initialZoom,
+      imageOverlay,
     } = this.props;
 
     const nth = Math.ceil(photos.length / 50);
@@ -32,8 +34,8 @@ export class MapFilter extends React.Component {
     return (
       <div className="map">
         <Map
-          center={ { lat: 61.207459, lon: 25.121329 } }
-          zoom={ 15 }
+          center={ initialCenter }
+          zoom={ initialZoom }
           style={ { height: '400px', width: '100%' } }
           animate={ false }
           ref="map"
@@ -42,15 +44,19 @@ export class MapFilter extends React.Component {
           <TileLayer
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
-          <ImageOverlay
-            bounds={
-              [
-                { lat: 61.2141, lon: 25.1471 }, // North-east
-                { lat: 61.1985, lon: 25.1028 }, // South-west
-              ]
-            }
-            url={ `${host}/img/roihu_kartta.png` }
-          />
+          {
+            imageOverlay ? (
+                <ImageOverlay
+                  bounds={
+                    [
+                      imageOverlay.ne, // North-east
+                      imageOverlay.sw, // South-west
+                    ]
+                  }
+                  url={ imageOverlay.url }
+                />
+            ) : null
+          }
           {
             _(photos)
               .filter((photo, index) => index % nth === 0 || nth === 1)
@@ -65,7 +71,19 @@ export class MapFilter extends React.Component {
   }
 }
 
+const coordinatePair = React.PropTypes.shape({
+  lat: React.PropTypes.number.isRequired,
+  lon: React.PropTypes.number.isRequired,
+});
+
 MapFilter.propTypes = {
-  photos: React.PropTypes.array,
-  onChange: React.PropTypes.func,
+  photos: React.PropTypes.array.isRequired,
+  onChange: React.PropTypes.func.isRequired,
+  initialCenter: coordinatePair.isRequired,
+  initialZoom: React.PropTypes.number.isRequired,
+  imageOverlay: React.PropTypes.shape({
+    url: React.PropTypes.string.isRequired,
+    ne: coordinatePair.isRequired,
+    sw: coordinatePair.isRequired,
+  }),
 };

@@ -9,12 +9,11 @@
     "test": "npm run linter && npm run test-mocha",
     "linter": "eslint --ext js --ext jsx src test scripts webpack.development.config.babel.js webpack.production.config.babel.js",
     "test-mocha": "NODE_ENV=test mocha --timeout 4000 --compilers js:babel-register",
-    "create-tables": "psql $DATABASE_URL -f sql/create-tables.sql",
     "create-fake-data": "psql $DATABASE_URL -f sql/create-fake-data.sql",
     "reset-database": "vagrant/reset-database.sh",
     "bundle": "NODE_ENV=production webpack -p --config webpack.production.config.babel.js",
     "bundle-dev": "webpack --config webpack.development.config.babel.js",
-    "backend": "babel-node src/server/server.js"
+    "psql": "psql $DATABASE_URL"
   },
   "dependencies": {
     "babel-cli": "^6.11.4",
@@ -65,5 +64,5 @@
     ]
   },
   "private": true,
-  "licence": "UNLICENCED"
+  "license": "MIT"
 }

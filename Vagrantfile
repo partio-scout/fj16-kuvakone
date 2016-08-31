@@ -44,6 +44,7 @@ export_env_if_unset "LC_ALL" "$locale"
 export_env_if_unset "DATABASE_URL" "postgres://vagrant:vagrant@localhost/vagrant"
 export_env_if_unset "TEST_DATABASE_URL" "postgres://vagrant:vagrant@localhost/test"
 export_env_if_unset "PORT" "3000"
+export_env_if_unset "FLICKR_USER_ID" ""
 export_env_if_unset "FLICKR_ACCESS_TOKEN" "f0054c35ad19b3f095b68170a171b2f4"
 export_env_if_unset "FLICKR_ACCESS_TOKEN_SECRET" "9de084433025b0ea"
 

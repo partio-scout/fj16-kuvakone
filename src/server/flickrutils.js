@@ -2,7 +2,7 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 import * as dbUtils from './db';
 
-const flickrUserId = process.env.FLICKR_USER_ID || '142180152@N04'; // Roihu2016
+const flickrUserId = process.env.FLICKR_USER_ID;
 const photosPerPage = 500;
 
 export function getPublicPhotosPage(flickr, page) {
